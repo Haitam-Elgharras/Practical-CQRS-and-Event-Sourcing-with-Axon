@@ -34,7 +34,8 @@ public class AccountAggregate {
                         command.getId(),
                         command.getInitialBalance(),
                         command.getCurrency()
-                ));
+                )
+        );
     }
 
     // 3/ EventSourcingHandler Listen to the event bus and when the event is received, update the state of the aggregate

@@ -29,7 +29,7 @@
 - The state of an Aggregate is not stored in a traditional database record but is reconstructed from a sequence of events. 
 - These events represent all the changes that have occurred to the Aggregate over time. 
 - The Event Sourcing engine replays these events to rebuild the current state of the Aggregate. 
-- Aggregates handle commands, emit events when their state changes, and update the read model, which is optimized for querying. 
+- **Aggregates handle commands, emit events when their state changes**, and update the read model, which is optimized for querying. 
 - This separation of command and query responsibilities is a key aspect of the CQRS (Command Query Responsibility Segregation) pattern.
 
 ### Event Store
@@ -42,7 +42,7 @@
 
 ### Axon Framework
 - A Java framework that simplifies the implementation of CQRS and Event Sourcing
-- Provides necessary infrastructure (command bus, event bus, etc.)
+- Provides the necessary infrastructure (command bus, event bus, etc.)
 
 ## Implementation Concepts
 
@@ -67,7 +67,10 @@
 
 ## Command Handling Process
 
-When the system receives a command, it goes through several stages of processing. This process ensures that commands are properly validated, executed, and their effects are correctly applied to the system state. Here's a detailed breakdown of the steps:
+When the system receives a command, it goes through several stages of processing.
+This process ensures that commands are properly validated, executed,
+and their effects are correctly applied to the system state.
+Here's a detailed breakdown of the steps:
 
 1. **Command Reception**
     - The API endpoint (usually a REST controller) receives the command as a request.
@@ -109,7 +112,9 @@ When the system receives a command, it goes through several stages of processing
 10. **API Response**
     - The controller formulates and sends an appropriate response to the client.
 
-This process ensures a clear separation between command processing (which may change the system state) and query processing (which only reads the state). It also provides a robust audit trail through the stored events, allowing for powerful debugging, auditing, and state reconstruction capabilities.
+This process ensures a clear separation between command processing (which may change the system state) 
+and query processing (which only reads the state). It also provides a robust audit trail through the stored events,
+allowing for powerful debugging, auditing, and state reconstruction capabilities.
 
 ![img.png](src/main/resources/images/img.png)
 
