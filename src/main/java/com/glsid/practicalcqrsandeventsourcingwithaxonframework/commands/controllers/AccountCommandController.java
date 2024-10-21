@@ -1,7 +1,11 @@
 package com.glsid.practicalcqrsandeventsourcingwithaxonframework.commands.controllers;
 
 import com.glsid.practicalcqrsandeventsourcingwithaxonframework.commonapi.commands.CreateAccountCommand;
+import com.glsid.practicalcqrsandeventsourcingwithaxonframework.commonapi.commands.CreditAccountCommand;
+import com.glsid.practicalcqrsandeventsourcingwithaxonframework.commonapi.commands.DebitAccountCommand;
 import com.glsid.practicalcqrsandeventsourcingwithaxonframework.commonapi.dtos.CreateAccountRequestDTO;
+import com.glsid.practicalcqrsandeventsourcingwithaxonframework.commonapi.dtos.CreditAccountRequestDTO;
+import com.glsid.practicalcqrsandeventsourcingwithaxonframework.commonapi.dtos.DebitAccountRequestDTO;
 import lombok.AllArgsConstructor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventsourcing.eventstore.EventStore;
@@ -30,6 +34,28 @@ public class AccountCommandController {
                 request.getInitialBalance(),
                 request.getCurrency()
         ));
+    }
+
+    @PutMapping("/credit")
+    public CompletableFuture<String> CreditAccount(@RequestBody CreditAccountRequestDTO credit) {
+        return commandGateway.send(
+                new CreditAccountCommand(
+                        credit.getId(),
+                        credit.getAmount(),
+                        credit.getCurrency()
+                )
+        );
+    }
+
+    @PutMapping("/debit")
+    public CompletableFuture<String> CreditAccount(@RequestBody DebitAccountRequestDTO debit) {
+        return commandGateway.send(
+                new DebitAccountCommand(
+                        debit.getId(),
+                        debit.getAmount(),
+                        debit.getCurrency()
+                )
+        );
     }
 
     // read

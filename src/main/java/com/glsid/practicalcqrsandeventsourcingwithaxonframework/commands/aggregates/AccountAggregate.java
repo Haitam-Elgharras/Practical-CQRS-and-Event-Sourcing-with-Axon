@@ -1,9 +1,14 @@
 package com.glsid.practicalcqrsandeventsourcingwithaxonframework.commands.aggregates;
 
 import com.glsid.practicalcqrsandeventsourcingwithaxonframework.commonapi.commands.CreateAccountCommand;
+import com.glsid.practicalcqrsandeventsourcingwithaxonframework.commonapi.commands.CreditAccountCommand;
+import com.glsid.practicalcqrsandeventsourcingwithaxonframework.commonapi.commands.DebitAccountCommand;
 import com.glsid.practicalcqrsandeventsourcingwithaxonframework.commonapi.commands.enums.AccountStatus;
 import com.glsid.practicalcqrsandeventsourcingwithaxonframework.commonapi.events.AccountActivatedEvent;
 import com.glsid.practicalcqrsandeventsourcingwithaxonframework.commonapi.events.AccountCreatedEvent;
+import com.glsid.practicalcqrsandeventsourcingwithaxonframework.commonapi.events.AccountCreditedEvent;
+import com.glsid.practicalcqrsandeventsourcingwithaxonframework.commonapi.events.AccountDebitedEvent;
+import com.glsid.practicalcqrsandeventsourcingwithaxonframework.commonapi.exceptions.AmountException;
 import lombok.NoArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -58,5 +63,46 @@ public class AccountAggregate {
     @EventSourcingHandler
     public void on(AccountActivatedEvent event) {
         this.status = event.getAccountStatus();
+    }
+
+
+    // Account Operations
+    @CommandHandler
+    public void handleCreditAccountCommand(CreditAccountCommand creditCommand) {
+        if(creditCommand.getAmount() <= 0)
+            throw new AmountException("Amount should be greater than 0");
+
+        AggregateLifecycle.apply(
+                new AccountCreditedEvent(
+                        creditCommand.getId(),
+                        creditCommand.getAmount(),
+                        creditCommand.getCurrency()
+                )
+        );
+    }
+
+    @EventSourcingHandler
+    public void on(AccountCreditedEvent creditEvent) {
+        balance += creditEvent.getAmount();
+    }
+
+    // Account Operations
+    @CommandHandler
+    public void handleDebitAccountCommand(DebitAccountCommand debitCommand) {
+        if(debitCommand.getAmount() > balance || debitCommand.getAmount() <= 0)
+            throw new AmountException("Amount should be greater than 0 and less than balance");;
+
+        AggregateLifecycle.apply(
+                new AccountDebitedEvent(
+                        debitCommand.getId(),
+                        debitCommand.getAmount(),
+                        debitCommand.getCurrency()
+                )
+        );
+    }
+
+    @EventSourcingHandler
+    public void on(AccountDebitedEvent debitEvent) {
+        balance -= debitEvent.getAmount();
     }
 }
