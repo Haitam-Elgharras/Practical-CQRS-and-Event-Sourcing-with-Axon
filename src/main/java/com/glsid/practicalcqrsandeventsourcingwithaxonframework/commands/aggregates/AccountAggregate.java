@@ -38,7 +38,8 @@ public class AccountAggregate {
                 new AccountCreatedEvent(
                         command.getId(),
                         command.getInitialBalance(),
-                        command.getCurrency()
+                        command.getCurrency(),
+                        AccountStatus.CREATED
                 )
         );
     }
