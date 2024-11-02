@@ -26,14 +26,15 @@ public class AccountAggregate {
     private String currency;
     private AccountStatus status;
 
-    // 2/ the CommandHandler Listen to the command bus and when a command is received, it does some validation and then sends an event to the event bus
+    // 2/ the CommandHandler Listen to the command bus and when a command is received,
+    // it does some validation and then sends an event to the event bus
     @CommandHandler
     public AccountAggregate(CreateAccountCommand command) {
         if (command.getInitialBalance() < 0) {
             throw new IllegalArgumentException("Initial balance cannot be less than 0");
         }
 
-        // send the event to the event bus
+        // send the event to the event bus and store it in the event store
         AggregateLifecycle.apply(
                 new AccountCreatedEvent(
                         command.getId(),
@@ -44,7 +45,8 @@ public class AccountAggregate {
         );
     }
 
-    // 3/ EventSourcingHandler Listen to the event bus and when the event is received, update the state of the aggregate
+    // 3/ EventSourcingHandler Listen to the event bus and when the event is received,
+    //    update the state of the aggregate
     @EventSourcingHandler
     public void on(AccountCreatedEvent event) {
         this.accountId = event.getId();

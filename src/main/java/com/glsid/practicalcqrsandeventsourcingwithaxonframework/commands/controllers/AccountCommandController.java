@@ -8,6 +8,7 @@ import com.glsid.practicalcqrsandeventsourcingwithaxonframework.commonapi.dtos.C
 import com.glsid.practicalcqrsandeventsourcingwithaxonframework.commonapi.dtos.DebitAccountRequestDTO;
 import lombok.AllArgsConstructor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.eventsourcing.eventstore.DomainEventStream;
 import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +25,14 @@ public class AccountCommandController {
 
     // 1/ commandGateway is used to send commands to the command bus
     private CommandGateway commandGateway;
+
+    // This is used to read events from the event store
     private EventStore eventStore;
 
     @PostMapping(path = "/create")
     public CompletableFuture<String> createAccount(@RequestBody CreateAccountRequestDTO request) {
-        // when we create an account, we need to send a command to the command bus so that the command handler can handle it
+        // when we create an account, we need to send a command to the command bus
+        // so that the command handler can handle it
         return commandGateway.send(new CreateAccountCommand(
                 UUID.randomUUID().toString(),
                 request.getInitialBalance(),
@@ -37,7 +41,7 @@ public class AccountCommandController {
     }
 
     @PutMapping("/credit")
-    public CompletableFuture<String> CreditAccount(@RequestBody CreditAccountRequestDTO credit) {
+    public CompletableFuture<String> creditAccount(@RequestBody CreditAccountRequestDTO credit) {
         return commandGateway.send(
                 new CreditAccountCommand(
                         credit.getId(),
@@ -48,7 +52,7 @@ public class AccountCommandController {
     }
 
     @PutMapping("/debit")
-    public CompletableFuture<String> CreditAccount(@RequestBody DebitAccountRequestDTO debit) {
+    public CompletableFuture<String> debitAccount(@RequestBody DebitAccountRequestDTO debit) {
         return commandGateway.send(
                 new DebitAccountCommand(
                         debit.getId(),

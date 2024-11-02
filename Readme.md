@@ -162,3 +162,8 @@ allowing for powerful debugging, auditing, and state reconstruction capabilities
     - GET http://localhost:8080/commands/accounts/eventStore/{accountId}
     - Replace `{accountId}` with the actual account ID
 ![img.png](src/main/resources/images/test.png)
+
+3. **Retrieve specific account details**
+    - GET http://localhost:8080/query/accounts/ef3b61c2-4385-433a-aae1-01227e50dc8e
+    - Replace `ef3b61c2-4385-433a-aae1-01227e50dc8e` with the actual account ID
+![img.png](src/main/resources/images/query.png)

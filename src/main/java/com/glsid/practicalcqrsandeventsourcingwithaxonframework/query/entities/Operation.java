@@ -19,6 +19,7 @@ public class Operation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Double amount;
     private Date createdAt;
     @Enumerated(EnumType.STRING)
     private OperationStatus status;

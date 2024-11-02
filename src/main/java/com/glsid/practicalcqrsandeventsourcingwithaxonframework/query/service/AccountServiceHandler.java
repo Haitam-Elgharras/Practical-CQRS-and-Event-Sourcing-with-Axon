@@ -74,6 +74,7 @@ public class AccountServiceHandler {
                 .account(savedAccount)
                 .status(OperationStatus.DEBIT)
                 .createdAt(new Date())
+                .amount(event.getAmount())
                 .build();
        operationRepository.save(operation);
 //       queryUpdateEmitter.emit();
@@ -93,6 +94,7 @@ public class AccountServiceHandler {
                 .account(savedAccount)
                 .status(OperationStatus.CREDIT)
                 .createdAt(new Date())
+                .amount(event.getAmount())
                 .build();
         operationRepository.save(operation);
     }
